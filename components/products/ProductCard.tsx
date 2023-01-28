@@ -15,7 +15,7 @@ export const ProductCard: FC<Props> = ({ product }) => {
   }, [isHovered, product.images]);
 
   return (
-    <Grid item xs={6} sm={4} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+    <span onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
       <Card>
         <NextLink href="/product/slug" passHref prefetch={false}>
           <Link>
@@ -30,6 +30,6 @@ export const ProductCard: FC<Props> = ({ product }) => {
         <Typography fontWeight={700}>{product.title}</Typography>
         <Typography fontWeight={500}>{`$${product.price}`}</Typography>
       </Box>
-    </Grid>
+    </span>
   );
 };

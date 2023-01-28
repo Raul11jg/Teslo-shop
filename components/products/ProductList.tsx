@@ -11,7 +11,9 @@ export const ProductList: FC<Props> = ({ products }) => {
   return (
     <Grid container spacing={4}>
       {products.map((product: IProduct) => (
-        <ProductCard key={product._id} product={product} />
+        <Grid item xs={6} sm={4} key={product.slug}>
+          <ProductCard product={product} />
+        </Grid>
       ))}
     </Grid>
   );
