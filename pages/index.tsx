@@ -2,18 +2,10 @@ import { Typography } from '@mui/material';
 import type { NextPage } from 'next';
 import { ShopLayout } from '../components/layouts';
 import { ProductList } from '../components/products';
-
-import useSWR from 'swr';
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import { useProducts } from '../hooks';
 
 const HomePage: NextPage = () => {
-  const { data, error } = useSWR('/api/products', fetcher);
-
-  if (error) return <div>failed to load</div>;
-  if (!data) return <div>loading...</div>;
-
-  console.log({ data });
+  const { products, isLoading } = useProducts('/products');
 
   return (
     <ShopLayout title={'Tesla Shop | Home'} pageDescription={'Encuentra los mejores productos de Tesla'}>
@@ -24,7 +16,7 @@ const HomePage: NextPage = () => {
         Todos los productos
       </Typography>
 
-      <ProductList products={data} />
+      {isLoading ? <Typography variant="h3">Cargando...</Typography> : <ProductList products={products} />}
     </ShopLayout>
   );
 };
