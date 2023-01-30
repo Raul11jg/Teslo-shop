@@ -15,7 +15,7 @@ export const connect = async () => {
     console.log('Ya estabamos conectados');
     return;
   }
-
+  mongoose.set('strictQuery', false);
   if (mongoose.connections.length > 0) {
     mongoConnection.isConnected = mongoose.connections[0].readyState;
 
