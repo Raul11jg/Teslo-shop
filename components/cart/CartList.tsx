@@ -10,11 +10,15 @@ interface Props {
 }
 
 export const CartList: FC<Props> = ({ editable = false }) => {
-  const { cart, updateCartQuantity } = useContext(CartContext);
+  const { cart, updateCartQuantity, removeCartProduct } = useContext(CartContext);
 
   const onNewCartQuantityValue = (product: ICartProduct, newQuantityValue: number) => {
     product.quantity = newQuantityValue;
     updateCartQuantity(product);
+  };
+
+  const handleRemoveProduct = (product: ICartProduct) => {
+    removeCartProduct(product);
   };
 
   return (
@@ -50,7 +54,7 @@ export const CartList: FC<Props> = ({ editable = false }) => {
           <Grid item xs={2} display="flex" alignItems="center" flexDirection="column">
             <Typography>{`$${product.price}`}</Typography>
             {editable && (
-              <Button variant="text" color="secondary">
+              <Button variant="text" color="secondary" onClick={() => handleRemoveProduct(product)}>
                 Eliminar
               </Button>
             )}
