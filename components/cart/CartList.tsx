@@ -1,25 +1,31 @@
-import React, { FC } from 'react';
-import { initialData } from '../../database/products';
-import { Box, Button, CardActionArea, CardMedia, Grid, Link, Typography } from '@mui/material';
+import React, { FC, useContext } from 'react';
 import NextLink from 'next/link';
+import { Box, Button, CardActionArea, CardMedia, Grid, Link, Typography } from '@mui/material';
 import { ItemCounter } from '../ui';
-
-const productsInCart = [initialData.products[0], initialData.products[1], initialData.products[2]];
+import { CartContext } from '../../context';
+import { ICartProduct } from '../../interfaces';
 
 interface Props {
   editable?: boolean;
 }
 
 export const CartList: FC<Props> = ({ editable = false }) => {
+  const { cart, updateCartQuantity } = useContext(CartContext);
+
+  const onNewCartQuantityValue = (product: ICartProduct, newQuantityValue: number) => {
+    product.quantity = newQuantityValue;
+    updateCartQuantity(product);
+  };
+
   return (
     <>
-      {productsInCart.map((product) => (
-        <Grid container spacing={2} sx={{ mb: 1 }} key={product.slug}>
+      {cart.map((product) => (
+        <Grid container spacing={2} sx={{ mb: 1 }} key={product.slug + product.size}>
           <Grid item xs={3}>
-            <NextLink href="product/slug" passHref>
+            <NextLink href={`products/${product.slug}`} passHref>
               <Link>
                 <CardActionArea>
-                  <CardMedia image={`/products/${product.images[0]}`} component="img" sx={{ borderRadius: '5px' }} />
+                  <CardMedia image={`/products/${product.image}`} component="img" sx={{ borderRadius: '5px' }} />
                 </CardActionArea>
               </Link>
             </NextLink>
@@ -29,13 +35,13 @@ export const CartList: FC<Props> = ({ editable = false }) => {
             <Box display="flex" flexDirection="column">
               <Typography variant="body1">{product.title}</Typography>
               <Typography variant="body1">
-                Talla: <strong>M</strong>
+                Talla: <strong>{product.size}</strong>
               </Typography>
               {editable ? (
-                <ItemCounter />
+                <ItemCounter currentValue={product.quantity} maxValue={10} updatedQuantity={(value) => onNewCartQuantityValue(product, value)} />
               ) : (
                 <Typography variant="body1">
-                  Cantidad: <strong>3</strong>
+                  Cantidad: <strong>{product.quantity}</strong>
                 </Typography>
               )}
             </Box>

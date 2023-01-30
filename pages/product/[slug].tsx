@@ -20,7 +20,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
 
   const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
     _id: product._id,
-    images: product.images[0],
+    image: product.images[0],
     price: product.price,
     size: undefined,
     slug: product.slug,
@@ -37,7 +37,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
     if (!tempCartProduct.size) return;
 
     addProductToCart(tempCartProduct);
-    //router.push('/cart');
+    router.push('/cart');
   };
 
   return (
