@@ -1,11 +1,10 @@
-import { GetStaticPaths } from 'next';
-import { GetStaticProps } from 'next';
-import { Box, Button, Grid, Typography } from '@mui/material';
-import { NextPage } from 'next';
+import { useState } from 'react';
+import { NextPage, GetStaticPaths, GetStaticProps } from 'next';
+import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 import { ShopLayout } from '../../components/layouts';
 import { ProductSlideshow, SizeSelector } from '../../components/products';
 import { ItemCounter } from '../../components/ui';
-import { IProduct } from '../../interfaces';
+import { ICartProduct, IProduct } from '../../interfaces';
 import { dbProducts } from '../../database';
 
 interface Props {
@@ -13,11 +12,19 @@ interface Props {
 }
 
 const ProductPage: NextPage<Props> = ({ product }) => {
-  //const router = useRouter();
-  //const { products: product, isLoading } = useProducts(`/products/${router.query.slug}`);
+  const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
+    _id: product._id,
+    images: product.images[0],
+    price: product.price,
+    size: undefined,
+    slug: product.slug,
+    title: product.title,
+    gender: product.gender,
+    quantity: 1,
+  });
 
   return (
-    <ShopLayout title={'ABC'} pageDescription={''}>
+    <ShopLayout title={product.title} pageDescription={''}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={7}>
           <ProductSlideshow images={product.images} />
@@ -33,12 +40,16 @@ const ProductPage: NextPage<Props> = ({ product }) => {
             <Box sx={{ my: 2 }}>
               <Typography variant="subtitle2">Cantidad</Typography>
               <ItemCounter />
-              <SizeSelector sizes={product.sizes} />
+              <SizeSelector sizes={product.sizes} selectedSize={tempCartProduct.size} tempCartProduct={tempCartProduct} setTempCartProduct={setTempCartProduct} />
             </Box>
 
-            <Button color="secondary" className="circular-btn">
-              Agregar al carrito
-            </Button>
+            {product.inStock === 0 ? (
+              <Chip label="No hay disponibles" color="error" variant="outlined" />
+            ) : (
+              <Button color="secondary" className="circular-btn">
+                {tempCartProduct.size ? 'Agregar al carrito' : 'Selecciona una talla'}
+              </Button>
+            )}
 
             {/* <Chip label="No hay disponibles" color="error" variant="outlined" /> */}
 
