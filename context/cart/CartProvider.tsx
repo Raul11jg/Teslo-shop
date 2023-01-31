@@ -5,10 +5,18 @@ import Cookie from 'js-cookie';
 
 export interface CartState {
   cart: ICartProduct[];
+  numberOfItems: number;
+  subTotal: number;
+  tax: number;
+  total: number;
 }
 
 const CART_INITIAL_STATE: CartState = {
   cart: Cookie.get('cart') ? JSON.parse(Cookie.get('cart')!) : [],
+  numberOfItems: 0,
+  subTotal: 0,
+  tax: 0,
+  total: 0,
 };
 
 export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -16,6 +24,24 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     Cookie.set('cart', JSON.stringify(state.cart));
+  }, [state.cart]);
+
+  useEffect(() => {
+    //Count total items in cart
+    const numberOfItems = state.cart.reduce((prev, current) => prev + current.quantity, 0);
+
+    const subTotal = state.cart.reduce((prev, current) => prev + current.quantity * current.price, 0);
+
+    const taxRate = Number(process.env.NEXT_PUBLIC_TAX_RATE || 0);
+
+    const orderSummary = {
+      numberOfItems,
+      subTotal,
+      tax: subTotal * taxRate,
+      total: subTotal + subTotal * taxRate,
+    };
+
+    dispatch({ type: '[Cart] - Update order summary', payload: orderSummary });
   }, [state.cart]);
 
   const addProductToCart = (product: ICartProduct) => {
