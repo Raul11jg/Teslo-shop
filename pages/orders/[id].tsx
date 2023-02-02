@@ -1,8 +1,8 @@
-import { Box, Button, Card, CardContent, Chip, Divider, Grid, Link, Typography } from '@mui/material';
+import { Box, Card, CardContent, Chip, Divider, Grid, Link, Typography } from '@mui/material';
 import { ShopLayout } from '../../components/layouts';
 import { CartList, OrderSummary } from '../../components/cart';
 import NextLink from 'next/link';
-import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
+import { CreditScoreOutlined } from '@mui/icons-material';
 
 const OrderPage = () => {
   return (
