@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { AuthLayout } from '../../components/layouts';
-import { Box, Grid, Typography, TextField, Button, Link, Chip } from '@mui/material';
+import React, { useContext, useState } from 'react';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
+import { AuthContext } from '../../context';
+import { AuthLayout } from '../../components/layouts';
 import { useForm } from 'react-hook-form';
 import { ErrorOutline } from '@mui/icons-material';
-import { teslaApi } from '../../api';
 import { validations } from '../../utils';
+import { Box, Grid, Typography, TextField, Button, Link, Chip } from '@mui/material';
 
 type FormData = {
   name: string;
@@ -14,7 +15,11 @@ type FormData = {
 };
 
 const RegisterPage = () => {
+  const router = useRouter();
   const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const { registerUser } = useContext(AuthContext);
 
   const {
     register,
@@ -25,15 +30,16 @@ const RegisterPage = () => {
   const onRegisterUser = async ({ name, email, password }: FormData) => {
     setShowError(false);
 
-    try {
-      const { data } = await teslaApi.post('/user/register', { name, email, password });
-      console.log(data);
-    } catch (error) {
-      console.log(error);
+    const { hasError, message } = await registerUser(name, email, password);
+
+    if (hasError) {
       setShowError(true);
+      setErrorMessage(message!);
       setTimeout(() => {
         setShowError(false);
       }, 3000);
+    } else {
+      router.replace('/');
     }
   };
 
@@ -76,7 +82,7 @@ const RegisterPage = () => {
 
             <Grid item xs={12}>
               <Button type="submit" color="secondary" className="circular-btn" size="large" fullWidth>
-                Login
+                Crear cuenta
               </Button>
             </Grid>
 
