@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AuthLayout } from '../../components/layouts';
-import { Box, Button, Grid, Link, TextField, Typography } from '@mui/material';
+import { Box, Button, Chip, Grid, Link, TextField, Typography } from '@mui/material';
 import NextLink from 'next/link';
 import { useForm } from 'react-hook-form';
 import { validations } from '../../utils';
+import { teslaApi } from '../../api';
+import { ErrorOutline } from '@mui/icons-material';
 
 type FormData = {
   email: string;
@@ -18,8 +20,24 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<FormData>();
 
-  const onLoginUser = (data: FormData) => {
-    console.log(data);
+  const [showError, setShowError] = useState(false);
+
+  const onLoginUser = async ({ email, password }: FormData) => {
+    setShowError(false);
+
+    try {
+      const { data } = await teslaApi.post('/user/login', { email, password });
+      const { token, user } = data;
+      console.log(token, user);
+    } catch (error) {
+      console.log(error);
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+      }, 3000);
+    }
+
+    //TODO: navigate to previous page or home
   };
 
   return (
@@ -31,6 +49,7 @@ const LoginPage = () => {
               <Typography variant="h1" component="h1">
                 Iniciar sesión
               </Typography>
+              {showError && <Chip label="No reconocemos ese usuario / contraseña" color="error" icon={<ErrorOutline />} className="fadeIn" />}
             </Grid>
 
             <Grid item xs={12}>
