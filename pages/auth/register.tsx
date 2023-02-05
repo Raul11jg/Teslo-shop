@@ -21,6 +21,8 @@ const RegisterPage = () => {
 
   const { registerUser } = useContext(AuthContext);
 
+  const destination = router.query.prevPage || '';
+
   const {
     register,
     handleSubmit,
@@ -39,7 +41,7 @@ const RegisterPage = () => {
         setShowError(false);
       }, 3000);
     } else {
-      router.replace('/');
+      router.replace((destination as string) || '/');
     }
   };
 
@@ -87,7 +89,7 @@ const RegisterPage = () => {
             </Grid>
 
             <Grid item xs={12} display="flex" justifyContent="end">
-              <NextLink href="/auth/login" passHref>
+              <NextLink href={destination ? `/auth/login?prevPage=${destination}` : '/auth/login'} passHref>
                 <Link underline="always">¿Ya tienes cuenta?</Link>
               </NextLink>
             </Grid>
