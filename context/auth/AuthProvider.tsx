@@ -1,4 +1,5 @@
 import { FC, PropsWithChildren, useEffect, useReducer } from 'react';
+import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import { teslaApi } from '../../api';
 import { IUser } from '../../interfaces';
@@ -17,6 +18,7 @@ const AUTH_INITIAL_STATE: AuthState = {
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
+  const router = useRouter();
 
   useEffect(() => {
     checkToken();
@@ -73,6 +75,14 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
+  const logoutUser = () => {
+    Cookies.remove('token');
+    Cookies.remove('cart');
+
+    //refresh page
+    router.reload();
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -80,6 +90,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
         loginUser,
         registerUser,
+        logoutUser,
       }}
     >
       {children}
