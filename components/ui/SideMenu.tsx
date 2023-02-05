@@ -106,7 +106,7 @@ export const SideMenu = () => {
           </ListItem>
 
           {!isLoggedIn ? (
-            <ListItem button>
+            <ListItem button onClick={() => navigateTo(`/auth/login?prevPage=${router.asPath}`)}>
               <ListItemIcon>
                 <VpnKeyOutlined />
               </ListItemIcon>

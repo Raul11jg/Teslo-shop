@@ -40,7 +40,8 @@ const LoginPage = () => {
       return;
     }
 
-    router.replace('/');
+    const destination = router.query.prevPage || '/';
+    router.replace(destination as string);
   };
 
   return (
