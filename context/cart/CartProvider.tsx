@@ -10,7 +10,18 @@ export interface CartState {
   subTotal: number;
   tax: number;
   total: number;
-  shippingAddress?: {};
+  shippingAddress?: ShippingAddress;
+}
+
+export interface ShippingAddress {
+  firstName: string;
+  lastName: string;
+  address: string;
+  address2?: string;
+  postalCode: string;
+  city: string;
+  country: string;
+  phone: string;
 }
 
 const CART_INITIAL_STATE: CartState = {
@@ -32,7 +43,20 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [state.cart]);
 
   useEffect(() => {
-    dispatch({ type: '[Cart] - LoadAddress from Cookies', payload: Cookie.get('address') ? JSON.parse(Cookie.get('address')!) : {} });
+    if (Cookie.get('firstName')) {
+      const shippingAddress = {
+        firstName: Cookie.get('firstName') || '',
+        lastName: Cookie.get('lastName') || '',
+        address: Cookie.get('address') || '',
+        address2: Cookie.get('address2') || '',
+        postalCode: Cookie.get('postalCode') || '',
+        city: Cookie.get('city') || '',
+        country: Cookie.get('country') || '',
+        phone: Cookie.get('phone') || '',
+      };
+
+      dispatch({ type: '[Cart] - LoadAddress from Cookies', payload: shippingAddress });
+    }
   }, []);
 
   useEffect(() => {
@@ -81,8 +105,15 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     dispatch({ type: '[Cart] - Remove product from cart', payload: product });
   };
 
-  const updateShippingAddress = (address: {}) => {
-    Cookie.set('address', JSON.stringify(address));
+  const updateShippingAddress = (address: ShippingAddress) => {
+    Cookie.set('firstName', address.firstName);
+    Cookie.set('lastName', address.lastName);
+    Cookie.set('address', address.address);
+    Cookie.set('address2', address.address2 || '');
+    Cookie.set('postalCode', address.postalCode);
+    Cookie.set('city', address.city);
+    Cookie.set('country', address.country);
+    Cookie.set('phone', address.phone);
 
     dispatch({ type: '[Cart] - Update ShippingAddress', payload: address });
   };

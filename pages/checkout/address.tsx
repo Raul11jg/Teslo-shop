@@ -19,16 +19,28 @@ type FormData = {
   phone: string;
 };
 
+const getAddressFromCookies = (): FormData => {
+  return {
+    firstName: Cookie.get('firstName') || '',
+    lastName: Cookie.get('lastName') || '',
+    address: Cookie.get('address') || '',
+    address2: Cookie.get('address2') || '',
+    postalCode: Cookie.get('postalCode') || '',
+    city: Cookie.get('city') || '',
+    country: Cookie.get('country') || '',
+    phone: Cookie.get('phone') || '',
+  };
+};
+
 const AddressPage = () => {
   const router = useRouter();
   const { updateShippingAddress } = useContext(CartContext);
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<FormData>({
-    defaultValues: Cookie.get('address') ? JSON.parse(Cookie.get('address')!) : {},
+    defaultValues: getAddressFromCookies(),
   });
 
   const handleCheckout = (dataForm: FormData) => {
@@ -67,7 +79,7 @@ const AddressPage = () => {
 
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <TextField select variant="filled" label="País" defaultValue={countries[0].code} {...register('country', { required: 'Este campo es requerido' })} error={!!errors.country}>
+              <TextField select variant="filled" label="País" defaultValue={Cookie.get('country') || countries[0].code} {...register('country', { required: 'Este campo es requerido' })} error={!!errors.country}>
                 {countries.map((country) => (
                   <MenuItem key={country.code} value={country.code}>
                     {country.name}
