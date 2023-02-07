@@ -8,10 +8,12 @@ interface ContextProps {
   subTotal: number;
   tax: number;
   total: number;
+  shippingAdress?: {};
 
   addProductToCart: (product: ICartProduct) => void;
   updateCartQuantity: (product: ICartProduct) => void;
   removeCartProduct: (product: ICartProduct) => void;
+  updateShippingAddress: (shippingAddress: {}) => void;
 }
 
 export const CartContext = createContext({} as ContextProps);

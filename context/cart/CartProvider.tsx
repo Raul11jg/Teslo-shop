@@ -10,6 +10,7 @@ export interface CartState {
   subTotal: number;
   tax: number;
   total: number;
+  shippingAddress?: {};
 }
 
 const CART_INITIAL_STATE: CartState = {
@@ -19,6 +20,7 @@ const CART_INITIAL_STATE: CartState = {
   subTotal: 0,
   tax: 0,
   total: 0,
+  shippingAddress: undefined,
 };
 
 export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -28,6 +30,10 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     Cookie.set('cart', JSON.stringify(state.cart));
     state.isLoaded = true;
   }, [state.cart]);
+
+  useEffect(() => {
+    dispatch({ type: '[Cart] - LoadAddress from Cookies', payload: Cookie.get('address') ? JSON.parse(Cookie.get('address')!) : {} });
+  }, []);
 
   useEffect(() => {
     //Count total items in cart
@@ -75,6 +81,12 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     dispatch({ type: '[Cart] - Remove product from cart', payload: product });
   };
 
+  const updateShippingAddress = (address: {}) => {
+    Cookie.set('address', JSON.stringify(address));
+
+    dispatch({ type: '[Cart] - Update ShippingAddress', payload: address });
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -82,6 +94,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         addProductToCart,
         updateCartQuantity,
         removeCartProduct,
+        updateShippingAddress,
       }}
     >
       {children}

@@ -5,6 +5,8 @@ import { ShopLayout } from '../../components/layouts';
 import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { countries } from '../../utils';
 import Cookie from 'js-cookie';
+import { useContext } from 'react';
+import { CartContext } from '../../context';
 
 type FormData = {
   firstName: string;
@@ -19,6 +21,7 @@ type FormData = {
 
 const AddressPage = () => {
   const router = useRouter();
+  const { updateShippingAddress } = useContext(CartContext);
   const {
     register,
     handleSubmit,
@@ -29,8 +32,7 @@ const AddressPage = () => {
   });
 
   const handleCheckout = (dataForm: FormData) => {
-    console.log(dataForm);
-    Cookie.set('address', JSON.stringify(dataForm));
+    updateShippingAddress(dataForm);
     router.push('/checkout/summary');
   };
 
