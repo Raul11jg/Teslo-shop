@@ -1,4 +1,4 @@
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { FC, PropsWithChildren, useEffect, useReducer } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
@@ -26,7 +26,7 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   useEffect(() => {
     if (status === 'authenticated') {
       console.log('data', data.user);
-      //dispatch({ type: '[Auth] - Login', payload: data.user as IUser });
+      dispatch({ type: '[Auth] - Login', payload: data.user as IUser });
     }
   }, [status, data]);
 
@@ -97,9 +97,10 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     Cookies.remove('city');
     Cookies.remove('country');
     Cookies.remove('phone');
+    signOut();
 
     //refresh page
-    router.reload();
+    //router.reload();
   };
 
   return (
