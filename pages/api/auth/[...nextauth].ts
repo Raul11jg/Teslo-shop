@@ -27,6 +27,18 @@ export const authOptions: NextAuthOptions = {
     // ...add more providers here
   ],
 
+  //Custom pages
+  pages: {
+    signIn: '/auth/login',
+    newUser: '/auth/register',
+  },
+
+  session: {
+    maxAge: 60 * 60 * 24 * 30, // 30 days
+    strategy: 'jwt',
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
+
   callbacks: {
     async jwt({ token, user, account }) {
       if (account) {
