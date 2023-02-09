@@ -24,7 +24,7 @@ export const Navbar = () => {
   return (
     <AppBar>
       <Toolbar>
-        <NextLink href="/" passHref>
+        <NextLink href="/" passHref legacyBehavior>
           <Link display="flex" alignItems="center">
             <Typography variant="h6">Tesla |</Typography>
             <Typography sx={{ ml: 0.5 }}>Shop</Typography>
@@ -34,17 +34,17 @@ export const Navbar = () => {
         <Box flex={1}></Box>
 
         <Box sx={{ display: isSearchVisible ? 'none' : { xs: 'none', sm: 'block' } }} className="fadeIn">
-          <NextLink href="/category/men" passHref>
+          <NextLink href="/category/men" passHref legacyBehavior>
             <Link>
               <Button color={pathname === '/category/men' ? 'info' : 'primary'}>Hombres</Button>
             </Link>
           </NextLink>
-          <NextLink href="/category/women" passHref>
+          <NextLink href="/category/women" passHref legacyBehavior>
             <Link>
               <Button color={pathname === '/category/women' ? 'info' : 'primary'}>Mujeres</Button>
             </Link>
           </NextLink>
-          <NextLink href="/category/kid" passHref>
+          <NextLink href="/category/kid" passHref legacyBehavior>
             <Link>
               <Button color={pathname === '/category/kid' ? 'info' : 'primary'}>Niños</Button>
             </Link>
@@ -85,7 +85,7 @@ export const Navbar = () => {
           <SearchOutlined />
         </IconButton>
 
-        <NextLink href="/cart" passHref>
+        <NextLink href="/cart" passHref legacyBehavior>
           <Link>
             <IconButton>
               <Badge badgeContent={numberOfItems > 9 ? '+9' : numberOfItems} color="secondary">

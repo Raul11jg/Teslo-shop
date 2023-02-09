@@ -87,7 +87,7 @@ const LoginPage = () => {
             </Grid>
 
             <Grid item xs={12} display="flex" justifyContent="end">
-              <NextLink href={destination ? `/auth/register?prevPage=${destination}` : '/auth/register'} passHref>
+              <NextLink href={destination ? `/auth/register?prevPage=${destination}` : '/auth/register'} passHref legacyBehavior>
                 <Link underline="always">¿No tienes cuenta?</Link>
               </NextLink>
             </Grid>
