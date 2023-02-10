@@ -2,6 +2,7 @@ import { FC, PropsWithChildren, useEffect, useReducer } from 'react';
 import { ICartProduct, ShippingAddress } from '../../interfaces';
 import { CartContext, cartReducer } from './';
 import Cookie from 'js-cookie';
+import { teslaApi } from '../../api';
 
 export interface CartState {
   isLoaded: boolean;
@@ -107,6 +108,12 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     dispatch({ type: '[Cart] - Update ShippingAddress', payload: address });
   };
 
+  const createOrder = async () => {
+    try {
+      const { data } = await teslaApi.post('/orders', {});
+    } catch (error) {}
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -115,6 +122,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         updateCartQuantity,
         removeCartProduct,
         updateShippingAddress,
+        createOrder,
       }}
     >
       {children}
