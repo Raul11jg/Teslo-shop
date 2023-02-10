@@ -31,7 +31,7 @@ const SummaryPage = () => {
 
       <Grid container spacing={3}>
         <Grid item xs={12} sm={7}>
-          <CartList editable />
+          <CartList />
         </Grid>
         <Grid item xs={12} sm={5}>
           <Card className="summary-card">

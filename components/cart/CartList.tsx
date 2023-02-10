@@ -44,8 +44,8 @@ export const CartList: FC<Props> = ({ editable = false }) => {
               {editable ? (
                 <ItemCounter currentValue={product.quantity} maxValue={10} updatedQuantity={(value) => onNewCartQuantityValue(product, value)} />
               ) : (
-                <Typography variant="body1">
-                  Cantidad: <strong>{product.quantity}</strong>
+                <Typography variant="h5">
+                  {product.quantity} {product.quantity > 1 ? 'productos' : 'producto'}
                 </Typography>
               )}
             </Box>
@@ -54,8 +54,8 @@ export const CartList: FC<Props> = ({ editable = false }) => {
           <Grid item xs={2} display="flex" alignItems="center" flexDirection="column">
             <Typography>{`$${product.price}`}</Typography>
             {editable && (
-              <Button variant="text" color="secondary" onClick={() => handleRemoveProduct(product)}>
-                Eliminar
+              <Button variant="text" color="secondary" onClick={() => removeCartProduct(product)}>
+                Remover
               </Button>
             )}
           </Grid>
