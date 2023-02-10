@@ -1,13 +1,27 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { Box, Button, Card, CardContent, Divider, Grid, Link, Typography } from '@mui/material';
 import { ShopLayout } from '../../components/layouts';
 import { CartList, OrderSummary } from '../../components/cart';
 import { CartContext } from '../../context';
 import { countries } from '../../utils/countries';
+import Cookies from 'js-cookie';
 
 const SummaryPage = () => {
+  const router = useRouter();
   const { shippingAddress, numberOfItems } = useContext(CartContext);
+
+  useEffect(() => {
+    if (!Cookies.get('firstName')) {
+      console.log('No hay dirección de envío');
+      router.push('/checkout/address');
+    }
+  }, [router]);
+
+  if (!shippingAddress) {
+    return <></>;
+  }
 
   return (
     <ShopLayout title={'Resumen de compra'} pageDescription={'Resumen de la orden'}>
@@ -48,7 +62,8 @@ const SummaryPage = () => {
                     {shippingAddress.postalCode} {shippingAddress.city}
                   </Typography>
 
-                  <Typography>{countries.find((c) => c.code === shippingAddress.country)?.name}</Typography>
+                  {/* <Typography>{ countries.find( c => c.code === country )?.name }</Typography> */}
+                  <Typography>{shippingAddress.country}</Typography>
                   <Typography>{shippingAddress.phone}</Typography>
                 </>
               )}
