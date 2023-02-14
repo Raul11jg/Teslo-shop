@@ -4,7 +4,7 @@ export interface IOrder {
   _id?: string;
   user?: IUser | string;
   orderItems: IOrderItem[];
-  ShippingAddress: ShippingAddress;
+  shippingAddress: ShippingAddress;
   paymentResult?: string;
 
   numberOfItems: number;

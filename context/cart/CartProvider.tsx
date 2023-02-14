@@ -118,7 +118,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         ...p,
         size: p.size!,
       })),
-      ShippingAddress: state.shippingAddress,
+      shippingAddress: state.shippingAddress,
       numberOfItems: state.numberOfItems,
       subTotal: state.subTotal,
       tax: state.tax,
