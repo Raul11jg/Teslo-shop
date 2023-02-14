@@ -3,6 +3,7 @@ import { ICartProduct, IOrder, ShippingAddress } from '../../interfaces';
 import { CartContext, cartReducer } from './';
 import Cookie from 'js-cookie';
 import { teslaApi } from '../../api';
+import axios from 'axios';
 
 export interface CartState {
   isLoaded: boolean;
@@ -108,7 +109,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     dispatch({ type: '[Cart] - Update ShippingAddress', payload: address });
   };
 
-  const createOrder = async () => {
+  const createOrder = async (): Promise<{ hasError: boolean; message: string }> => {
     if (!state.shippingAddress) {
       throw new Error('Shipping address is required');
     }
@@ -126,9 +127,25 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
       isPaid: false,
     };
     try {
-      const { data } = await teslaApi.post('/orders', body);
-      console.log({ data });
-    } catch (error) {}
+      const { data } = await teslaApi.post<IOrder>('/orders', body);
+      //TODO: dispatch
+
+      return {
+        hasError: false,
+        message: data._id!,
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          hasError: true,
+          message: error.response?.data.message || 'Something went wrong',
+        };
+      }
+      return {
+        hasError: true,
+        message: 'Something went wrong, no controlled error',
+      };
+    }
   };
 
   return (
