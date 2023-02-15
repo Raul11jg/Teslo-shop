@@ -1,19 +1,44 @@
 import { GetServerSideProps, NextPage } from 'next';
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import { getSession } from 'next-auth/react';
-import { Box, Card, CardContent, Chip, Divider, Grid, Link, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
+import { Box, Card, CardContent, Chip, Divider, Grid, Typography } from '@mui/material';
 import { ShopLayout } from '../../components/layouts';
 import { CartList, OrderSummary } from '../../components/cart';
 import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
 import { dbOrders } from '../../database';
 import { IOrder } from '../../interfaces';
+import { teslaApi } from '../../api';
 
 interface Props {
   order: IOrder;
 }
 
+export type OrderResponseBody = {
+  id: string;
+  status: 'COMPLETED' | 'SAVED' | 'APPROVED' | 'VOIDED' | 'PAYER_ACTION_REQUIRED';
+};
+
 const OrderPage: NextPage<Props> = ({ order }) => {
+  const router = useRouter();
   const { shippingAddress } = order;
+
+  const onOrderCompleted = async (details: OrderResponseBody) => {
+    if (details.status !== 'COMPLETED') {
+      return alert('Error al procesar el pago');
+    }
+
+    try {
+      const { data } = await teslaApi.post('/orders/pay', {
+        transactionId: details.id,
+        orderId: order._id,
+      });
+      router.reload();
+    } catch (error) {
+      alert('Error al procesar el pago');
+      console.log(error);
+    }
+  };
 
   return (
     <ShopLayout title={'Resumen de la orden 123123'} pageDescription={'Resumen de la orden'}>
@@ -79,9 +104,10 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                     }}
                     onApprove={(data, actions) => {
                       return actions.order!.capture().then((details) => {
-                        console.log({ details });
-                        const name = details.payer.name!.given_name;
-                        alert(`Transaction completed by ${name}`);
+                        onOrderCompleted(details);
+                        //console.log({ details });
+                        //const name = details.payer.name!.given_name;
+                        //alert(`Transaction completed by ${name}`);
                       });
                     }}
                   />
