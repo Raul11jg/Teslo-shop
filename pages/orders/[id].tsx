@@ -58,12 +58,11 @@ const OrderPage: NextPage<Props> = ({ order }) => {
 
               <Divider sx={{ my: 1 }} />
 
-              <OrderSummary />
+              <OrderSummary order={order} />
 
-              <Box sx={{ mt: 3 }}>
+              <Box sx={{ mt: 3 }} display="flex" flexDirection="column">
                 {/* TODO */}
-                <h1>Pagar</h1>
-                <Chip sx={{ my: 2 }} label="Orden pagada" variant="outlined" color="success" icon={<CreditScoreOutlined />} />
+                {order.isPaid ? <Chip sx={{ my: 2 }} label="Orden pagada" variant="outlined" color="success" icon={<CreditScoreOutlined />} /> : <h1>Pagar</h1>}
               </Box>
             </CardContent>
           </Card>
