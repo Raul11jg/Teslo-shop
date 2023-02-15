@@ -7,7 +7,7 @@ import { CreditScoreOutlined } from '@mui/icons-material';
 const OrderPage = () => {
   return (
     <ShopLayout title={'Resumen de la orden 123123'} pageDescription={'Resumen de la orden'}>
-      <Typography variant="h1" component="h1">
+      <Typography variant="h1" component="h1" sx={{ mb: 2 }}>
         Order: 123123
       </Typography>
       {/* 

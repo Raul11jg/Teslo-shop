@@ -128,7 +128,8 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     };
     try {
       const { data } = await teslaApi.post<IOrder>('/orders', body);
-      //TODO: dispatch
+
+      dispatch({ type: '[Cart] - Order complete' });
 
       return {
         hasError: false,
