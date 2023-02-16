@@ -8,10 +8,7 @@ type Data =
   | {
       message: string;
     }
-  | {
-      users: IUser[];
-    };
-
+  | IUser[];
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   switch (req.method) {
     case 'GET':
@@ -32,7 +29,7 @@ const getUsers = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   await db.disconnect();
 
-  return res.status(200).json({ users });
+  return res.status(200).json(users);
 };
 
 const updateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
