@@ -1,9 +1,9 @@
 import { GetServerSideProps, NextPage } from 'next';
 import { Box, Card, CardContent, Chip, Divider, Grid, Typography } from '@mui/material';
 
-import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
+import { AirplaneTicketOutlined, CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
 import { IOrder } from '../../../interfaces';
-import { ShopLayout } from '../../../components/layouts';
+import { AdminLayout } from '../../../components/layouts';
 import { CartList, OrderSummary } from '../../../components/cart';
 import { dbOrders } from '../../../database';
 
@@ -20,10 +20,7 @@ const OrderAdminPage: NextPage<Props> = ({ order }) => {
   const { shippingAddress } = order;
 
   return (
-    <ShopLayout title={`Resumen de la orden ${order._id}`} pageDescription={'Resumen de la orden'}>
-      <Typography variant="h1" component="h1" sx={{ mb: 2 }}>
-        Order: {order._id}
-      </Typography>
+    <AdminLayout title={'Resumen de la orden'} subtitle={`Resumen de la orden ${order._id}`} icon={<AirplaneTicketOutlined />}>
       {order.isPaid ? (
         <Chip sx={{ my: 2 }} label="Orden pagada" variant="outlined" color="success" icon={<CreditScoreOutlined />} />
       ) : (
@@ -77,7 +74,7 @@ const OrderAdminPage: NextPage<Props> = ({ order }) => {
           </Card>
         </Grid>
       </Grid>
-    </ShopLayout>
+    </AdminLayout>
   );
 };
 
