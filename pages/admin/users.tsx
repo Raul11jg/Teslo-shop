@@ -1,23 +1,40 @@
-import { PeopleOutline } from '@mui/icons-material';
-import React from 'react';
-import { AdminLayout } from '../../components/layouts';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import { Grid, MenuItem, Select } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { IUser } from '../../interfaces';
 import { teslaApi } from '../../api';
+import { IUser } from '../../interfaces';
+import { AdminLayout } from '../../components/layouts';
+import { PeopleOutline } from '@mui/icons-material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Grid, MenuItem, Select } from '@mui/material';
 
 const UsersPage = () => {
   const { data, error } = useSWR<IUser[]>('/api/admin/users');
+
+  const [users, setUsers] = useState<IUser[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setUsers(data);
+    }
+  }, [data]);
 
   if (!data && !error) return <></>;
 
   if (!data || error) return <></>;
 
   const onRoleUpdated = async (userId: string, newRole: string) => {
+    const previusUsers = users.map((user) => ({ ...user }));
+    const updatedUsers = users.map((user) => ({
+      ...user,
+      role: user._id === userId ? newRole : user.role,
+    }));
+
+    setUsers(updatedUsers);
+
     try {
       await teslaApi.put('/admin/users', { userId, role: newRole });
     } catch (error) {
+      setUsers(previusUsers);
       alert('Error al actualizar el rol del usuario');
     }
   };
@@ -49,7 +66,7 @@ const UsersPage = () => {
     },
   ];
 
-  const rows = data!.map((user) => ({
+  const rows = users.map((user) => ({
     id: user._id,
     email: user.email,
     name: user.name,
