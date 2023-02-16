@@ -13,6 +13,8 @@ interface Props {
 export const AdminLayout: FC<Props> = ({ children, title, subtitle, icon }) => {
   return (
     <>
+      <title>{title}</title>
+
       <nav>
         <AdminNavbar />
       </nav>
