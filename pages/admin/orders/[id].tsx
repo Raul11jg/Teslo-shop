@@ -1,6 +1,5 @@
 import { GetServerSideProps, NextPage } from 'next';
-import { getSession } from 'next-auth/react';
-import { Box, Card, CardContent, Chip, CircularProgress, Divider, Grid, Typography } from '@mui/material';
+import { Box, Card, CardContent, Chip, Divider, Grid, Typography } from '@mui/material';
 
 import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
 import { IOrder } from '../../../interfaces';
@@ -87,23 +86,13 @@ const OrderAdminPage: NextPage<Props> = ({ order }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
   const { id = '' } = query;
-  const session: any = await getSession({ req });
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: `/auth/login/prevPage=/orders/${id}`,
-        permanent: false,
-      },
-    };
-  }
 
   const order = await dbOrders.getOrderById(id.toString());
 
   if (!order) {
     return {
       redirect: {
-        destination: `/orders/history`,
+        destination: `/admin/orders`,
         permanent: false,
       },
     };
