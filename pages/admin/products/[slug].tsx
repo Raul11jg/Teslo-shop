@@ -17,12 +17,12 @@ interface FormData {
   images: string[];
   inStock: number;
   price: number;
-  sizes: ISize[];
+  sizes: string[];
   slug: string;
   tags: string[];
   title: string;
-  type: IType;
-  gender: 'men' | 'women' | 'kid' | 'unisex';
+  type: string;
+  gender: string;
 }
 
 interface Props {
@@ -34,11 +34,26 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
+    setValue,
   } = useForm<FormData>({
     defaultValues: product,
   });
 
   const onDeleteTag = (tag: string) => {};
+
+  const onChangeSize = (size: string) => {
+    const currentSizes = getValues('sizes');
+    if (currentSizes.includes(size)) {
+      setValue(
+        'sizes',
+        currentSizes.filter((s) => s !== size),
+        { shouldValidate: true }
+      );
+    } else {
+      setValue('sizes', [...currentSizes, size], { shouldValidate: true });
+    }
+  };
 
   const onSubmit = (form: FormData) => {
     console.log(form);
@@ -114,11 +129,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 
             <FormControl sx={{ mb: 1 }}>
               <FormLabel>Tipo</FormLabel>
-              <RadioGroup
-                row
-                // value={ status }
-                // onChange={ onStatusChanged }
-              >
+              <RadioGroup row value={getValues('type')} onChange={(e) => setValue('type', e.target.value, { shouldValidate: true })}>
                 {validTypes.map((option) => (
                   <FormControlLabel key={option} value={option} control={<Radio color="secondary" />} label={capitalize(option)} />
                 ))}
@@ -127,11 +138,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 
             <FormControl sx={{ mb: 1 }}>
               <FormLabel>Género</FormLabel>
-              <RadioGroup
-                row
-                // value={ status }
-                // onChange={ onStatusChanged }
-              >
+              <RadioGroup row value={getValues('gender')} onChange={(e) => setValue('gender', e.target.value, { shouldValidate: true })}>
                 {validGender.map((option) => (
                   <FormControlLabel key={option} value={option} control={<Radio color="secondary" />} label={capitalize(option)} />
                 ))}
@@ -141,7 +148,14 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
             <FormGroup>
               <FormLabel>Tallas</FormLabel>
               {validSizes.map((size) => (
-                <FormControlLabel key={size} control={<Checkbox />} label={size} />
+                <FormControlLabel
+                  key={size}
+                  control={<Checkbox checked={getValues('sizes').includes(size)} />}
+                  label={size}
+                  onChange={(e) => {
+                    onChangeSize(size);
+                  }}
+                />
               ))}
             </FormGroup>
           </Grid>
