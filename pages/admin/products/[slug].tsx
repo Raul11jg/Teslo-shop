@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import { useForm } from 'react-hook-form';
 import { AdminLayout } from '../../../components/layouts';
-import { IProduct, ISize, IType } from '../../../interfaces';
+import { IProduct } from '../../../interfaces';
 import { DriveFileRenameOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
 import { dbProducts } from '../../../database';
 import { Box, Button, capitalize, Card, CardActions, CardMedia, Checkbox, Chip, Divider, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, ListItem, Paper, Radio, RadioGroup, TextField } from '@mui/material';
@@ -36,9 +36,24 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     formState: { errors },
     getValues,
     setValue,
+    watch,
   } = useForm<FormData>({
     defaultValues: product,
   });
+
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      console.log(value);
+      if (name === 'title') {
+        const newSlug = value.title?.trim().replaceAll(' ', '_').replaceAll("'", '').toLowerCase() || '';
+        setValue('slug', newSlug);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [watch, setValue]);
 
   const onDeleteTag = (tag: string) => {};
 
