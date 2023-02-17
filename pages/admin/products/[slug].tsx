@@ -6,6 +6,7 @@ import { IProduct } from '../../../interfaces';
 import { DriveFileRenameOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
 import { dbProducts } from '../../../database';
 import { Box, Button, capitalize, Card, CardActions, CardMedia, Checkbox, Chip, Divider, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, ListItem, Paper, Radio, RadioGroup, TextField } from '@mui/material';
+import { teslaApi } from '../../../api';
 
 const validTypes = ['shirts', 'pants', 'hoodies', 'hats'];
 const validGender = ['men', 'women', 'kid', 'unisex'];
@@ -40,6 +41,8 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
   } = useForm<FormData>({
     defaultValues: product,
   });
+
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const [newTagValue, setNewTagValue] = useState<string>('');
 
@@ -94,15 +97,33 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     }
   };
 
-  const onSubmit = (form: FormData) => {
-    console.log(form);
+  const onSubmit = async (form: FormData) => {
+    if (form.images.length < 2) return alert('Debes agregar al menos 2 imágenes');
+
+    setIsSaving(true);
+
+    try {
+      const { data } = await teslaApi({
+        url: '/admin/products',
+        method: 'PUT',
+        data: form,
+      });
+      console.log(data);
+      if (!form._id) {
+        //TODO: reload page
+      } else {
+        setIsSaving(false);
+      }
+    } catch (error) {
+      setIsSaving(false);
+    }
   };
 
   return (
     <AdminLayout title={'Producto'} subtitle={`Editando: ${product.title}`} icon={<DriveFileRenameOutline />}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box display="flex" justifyContent="end" sx={{ mb: 1 }}>
-          <Button color="secondary" startIcon={<SaveOutlined />} sx={{ width: '150px' }} type="submit">
+          <Button color="secondary" startIcon={<SaveOutlined />} sx={{ width: '150px' }} type="submit" disabled={isSaving}>
             Guardar
           </Button>
         </Box>

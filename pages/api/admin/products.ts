@@ -40,7 +40,7 @@ const updateProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
 
   if (!isValidObjectId(_id)) return res.status(400).json({ message: 'Invalid product' });
 
-  if (images.length <= 2) return res.status(400).json({ message: '2 images at least' });
+  if (images.length < 2) return res.status(400).json({ message: '2 images at least' });
 
   //TODO: procesar imagenes
 
