@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useForm } from 'react-hook-form';
 import { AdminLayout } from '../../../components/layouts';
@@ -41,9 +41,10 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     defaultValues: product,
   });
 
+  const [newTagValue, setNewTagValue] = useState<string>('');
+
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
-      console.log(value);
       if (name === 'title') {
         const newSlug = value.title?.trim().replaceAll(' ', '_').replaceAll("'", '').toLowerCase() || '';
         setValue('slug', newSlug);
@@ -55,7 +56,31 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     };
   }, [watch, setValue]);
 
-  const onDeleteTag = (tag: string) => {};
+  const onNewTag = (tag: string) => {
+    setNewTagValue(tag);
+    const currentTags = getValues('tags');
+    if (currentTags.includes(tag)) {
+      return;
+    } else if (tag.includes(' ') && tag.trim() !== '') {
+      tag = tag.trim();
+      if (currentTags.includes(tag)) {
+        setNewTagValue('');
+
+        return;
+      }
+      setValue('tags', [...currentTags, tag], { shouldValidate: true });
+      setNewTagValue('');
+    }
+  };
+
+  const onDeleteTag = (tag: string) => {
+    const currentTags = getValues('tags');
+    setValue(
+      'tags',
+      currentTags.filter((t) => t !== tag),
+      { shouldValidate: true }
+    );
+  };
 
   const onChangeSize = (size: string) => {
     const currentSizes = getValues('sizes');
@@ -190,7 +215,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
               helperText={errors.slug?.message}
             />
 
-            <TextField label="Etiquetas" variant="filled" fullWidth sx={{ mb: 1 }} helperText="Presiona [spacebar] para agregar" />
+            <TextField label="Etiquetas" variant="filled" fullWidth sx={{ mb: 1 }} helperText="Presiona [spacebar] para agregar" value={newTagValue} onChange={(e) => onNewTag(e.target.value)} />
 
             <Box
               sx={{
@@ -202,7 +227,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
               }}
               component="ul"
             >
-              {product.tags.map((tag) => {
+              {getValues('tags').map((tag) => {
                 return <Chip key={tag} label={tag} onDelete={() => onDeleteTag(tag)} color="secondary" size="small" sx={{ ml: 1, mt: 1 }} />;
               })}
             </Box>
