@@ -65,7 +65,6 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
       tag = tag.trim();
       if (currentTags.includes(tag)) {
         setNewTagValue('');
-
         return;
       }
       setValue('tags', [...currentTags, tag], { shouldValidate: true });
