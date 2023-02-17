@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useForm } from 'react-hook-form';
 import { AdminLayout } from '../../../components/layouts';
@@ -34,6 +34,7 @@ interface Props {
 
 const ProductAdminPage: FC<Props> = ({ product }) => {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const {
     register,
     handleSubmit,
@@ -98,6 +99,20 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     } else {
       setValue('sizes', [...currentSizes, size], { shouldValidate: true });
     }
+  };
+
+  const onFilesSelected = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    if (!target.files || target.files.length === 0) return;
+
+    try {
+      for (const file of target.files) {
+        const formData = new FormData();
+        console.log(file);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(target.files);
   };
 
   const onSubmit = async (form: FormData) => {
@@ -259,9 +274,11 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 
             <Box display="flex" flexDirection="column">
               <FormLabel sx={{ mb: 1 }}>Imágenes</FormLabel>
-              <Button color="secondary" fullWidth startIcon={<UploadOutlined />} sx={{ mb: 3 }}>
+              <Button color="secondary" fullWidth startIcon={<UploadOutlined />} sx={{ mb: 3 }} onClick={() => fileInputRef.current?.click()}>
                 Cargar imagen
               </Button>
+
+              <input ref={fileInputRef} type="file" multiple accept="image/png, image/jpeg, image/gif" style={{ display: 'none' }} onChange={onFilesSelected} />
 
               <Chip label="Es necesario al 2 imagenes" color="error" variant="outlined" />
 
