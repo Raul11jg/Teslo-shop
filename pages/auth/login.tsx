@@ -7,7 +7,7 @@ import { AuthLayout } from '../../components/layouts';
 import { useForm } from 'react-hook-form';
 import { validations } from '../../utils';
 import { ErrorOutline } from '@mui/icons-material';
-import { Box, Button, Chip, Divider, Grid, Link, TextField, Typography } from '@mui/material';
+import { Box, Button, Divider, Grid, Link, TextField, Typography } from '@mui/material';
 
 type FormData = {
   email: string;
@@ -62,7 +62,11 @@ const LoginPage = () => {
               <Typography variant="h1" component="h1">
                 Iniciar sesión
               </Typography>
-              {showError && <Chip label="No reconocemos ese usuario / contraseña" color="error" icon={<ErrorOutline />} className="fadeIn" />}
+              {showError && (
+                <Typography variant="h5" className="fadeIn">
+                  No reconocemos ese usuario / contraseña
+                </Typography>
+              )}
             </Grid>
 
             <Grid item xs={12}>
