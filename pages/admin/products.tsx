@@ -14,7 +14,7 @@ const columns: GridColDef[] = [
     renderCell: ({ row }) => {
       return (
         <a href={`/product/${row.slug}`} target="_blank" rel="noreferrer">
-          <CardMedia component="img" className="fadeIn" alt={row.title} image={`/products/${row.img}`} />
+          <CardMedia component="img" className="fadeIn" alt={row.title} image={row.img} />
         </a>
       );
     },

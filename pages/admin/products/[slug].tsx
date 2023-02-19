@@ -290,7 +290,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 
               <input ref={fileInputRef} type="file" multiple accept="image/png, image/jpeg, image/gif" style={{ display: 'none' }} onChange={onFilesSelected} />
 
-              <Chip label="Es necesario al 2 imagenes" color="error" variant="outlined" />
+              <Chip label="Es necesario al 2 imagenes" color="error" variant="outlined" sx={{ display: getValues('images').length < 2 ? 'flex' : 'none' }} />
 
               <Grid container spacing={2}>
                 {getValues('images').map((img) => (
