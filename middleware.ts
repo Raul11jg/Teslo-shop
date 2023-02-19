@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
     }
 
     const requestedPage = req.nextUrl.pathname;
-    return NextResponse.redirect(new URL(`/auth/login?p=${requestedPage}`, req.url));
+    return NextResponse.redirect(new URL(`/auth/login?prevPage=${requestedPage}`, req.url));
   }
 
   const validRoles = ['admin'];
