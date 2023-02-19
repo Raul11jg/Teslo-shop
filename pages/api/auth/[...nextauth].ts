@@ -3,7 +3,7 @@ import GithubProvider from 'next-auth/providers/github';
 import Credentials from 'next-auth/providers/credentials';
 import { dbUsers } from '../../../database';
 
-export const authOptions: NextAuthOptions = {
+export default NextAuth({
   // Configure one or more authentication providers
   providers: [
     Credentials({
@@ -62,6 +62,4 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-};
-
-export default NextAuth(authOptions);
+});
