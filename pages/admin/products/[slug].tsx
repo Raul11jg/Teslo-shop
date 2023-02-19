@@ -109,12 +109,20 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
         const formData = new FormData();
         formData.append('file', file);
         const { data } = await teslaApi.post<{ message: string }>('/admin/upload', formData);
-        //setValue('images', [...getValues('images'), data.message], { shouldValidate: true });
+        setValue('images', [...getValues('images'), data.message], { shouldValidate: true });
       }
     } catch (error) {
       console.log(error);
     }
     console.log(target.files);
+  };
+
+  const onDeleteImage = (image: string) => {
+    setValue(
+      'images',
+      getValues('images').filter((i) => i !== image),
+      { shouldValidate: true }
+    );
   };
 
   const onSubmit = async (form: FormData) => {
@@ -285,12 +293,12 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
               <Chip label="Es necesario al 2 imagenes" color="error" variant="outlined" />
 
               <Grid container spacing={2}>
-                {product.images.map((img) => (
+                {getValues('images').map((img) => (
                   <Grid item xs={4} sm={3} key={img}>
                     <Card>
-                      <CardMedia component="img" className="fadeIn" image={`/products/${img}`} alt={img} />
+                      <CardMedia component="img" className="fadeIn" image={img} alt={img} />
                       <CardActions>
-                        <Button fullWidth color="error">
+                        <Button fullWidth color="error" onClick={() => onDeleteImage(img)}>
                           Borrar
                         </Button>
                       </CardActions>

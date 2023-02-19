@@ -4,6 +4,9 @@ import { IProduct } from '../../../interfaces';
 import { Product } from '../../../models';
 import { isValidObjectId } from 'mongoose';
 
+import { v2 as cloudinary } from 'cloudinary';
+cloudinary.config(process.env.CLOUDINARY_URL || '');
+
 type Data =
   | {
       message: string;
@@ -54,7 +57,13 @@ const updateProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
       return res.status(400).json({ message: 'Product not found' });
     }
 
-    //TODO: Eliminar fotos en Cloudinary
+    // Eliminar fotos en Cloudinary
+    product.images.forEach(async (image) => {
+      if (!images.includes(image)) {
+        const fileId = image.substring(image.lastIndexOf('/') + 1).split('.')[0];
+        await cloudinary.uploader.destroy(fileId);
+      }
+    });
 
     await product.update(req.body);
     await db.disconnect();
