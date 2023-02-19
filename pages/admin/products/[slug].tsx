@@ -1,14 +1,14 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
+import { dbProducts } from '../../../database';
 import { AdminLayout } from '../../../components/layouts';
 import { IProduct } from '../../../interfaces';
-import { DriveFileRenameOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
-import { dbProducts } from '../../../database';
-import { Box, Button, capitalize, Card, CardActions, CardMedia, Checkbox, Chip, Divider, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, ListItem, Paper, Radio, RadioGroup, TextField } from '@mui/material';
 import { teslaApi } from '../../../api';
 import { Product } from '../../../models';
-import { useRouter } from 'next/router';
+import { DriveFileRenameOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
+import { Box, Button, capitalize, Card, CardActions, CardMedia, Checkbox, Chip, Divider, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, ListItem, Paper, Radio, RadioGroup, TextField } from '@mui/material';
 
 const validTypes = ['shirts', 'pants', 'hoodies', 'hats'];
 const validGender = ['men', 'women', 'kid', 'unisex'];
@@ -101,13 +101,15 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     }
   };
 
-  const onFilesSelected = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+  const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
     if (!target.files || target.files.length === 0) return;
 
     try {
       for (const file of target.files) {
         const formData = new FormData();
-        console.log(file);
+        formData.append('file', file);
+        const { data } = await teslaApi.post<{ message: string }>('/admin/upload', formData);
+        //setValue('images', [...getValues('images'), data.message], { shouldValidate: true });
       }
     } catch (error) {
       console.log(error);
