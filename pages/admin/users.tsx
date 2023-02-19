@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { teslaApi } from '../../api';
+import { teslaApi } from '../../axiosApi';
 import { IUser } from '../../interfaces';
 import { AdminLayout } from '../../components/layouts';
 import { PeopleOutline } from '@mui/icons-material';

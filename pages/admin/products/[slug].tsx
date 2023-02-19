@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { dbProducts } from '../../../database';
 import { AdminLayout } from '../../../components/layouts';
 import { IProduct } from '../../../interfaces';
-import { teslaApi } from '../../../api';
+import { teslaApi } from '../../../axiosApi';
 import { Product } from '../../../models';
 import { DriveFileRenameOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
 import { Box, Button, capitalize, Card, CardActions, CardMedia, Checkbox, Chip, Divider, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, ListItem, Paper, Radio, RadioGroup, TextField } from '@mui/material';

@@ -9,7 +9,7 @@ import { CartList, OrderSummary } from '../../components/cart';
 import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
 import { dbOrders } from '../../database';
 import { IOrder } from '../../interfaces';
-import { teslaApi } from '../../api';
+import { teslaApi } from '../../axiosApi';
 
 interface Props {
   order: IOrder;

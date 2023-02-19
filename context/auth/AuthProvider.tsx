@@ -2,7 +2,7 @@ import { useSession, signOut } from 'next-auth/react';
 import { FC, PropsWithChildren, useEffect, useReducer } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
-import { teslaApi } from '../../api';
+import { teslaApi } from '../../axiosApi';
 import { IUser } from '../../interfaces';
 import { AuthContext, authReducer } from './';
 import axios from 'axios';
