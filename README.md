@@ -19,3 +19,6 @@ Renombrar el archivo **.env.template** a **.env**
 ## Llamar a :
 
 ## http://localhost:3000/api/seed
+
+
+![image](https://github.com/Raul11jg/Teslo-shop/assets/46672868/0b6b1425-ff11-4d26-8818-edb0ec9195fc)
